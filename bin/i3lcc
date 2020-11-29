@@ -1,0 +1,267 @@
+#!/usr/bin/env python3
+
+# Copyright (C) 2020 Mathew R Gordon <https://github.com/mgord9518>
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# VERSON 0.1
+# This program is in early development and is very likely to have bugs
+# and lack features. Push requests and constructive criticism always welcome!
+
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore    import *
+from PyQt5.QtGui     import *
+from PyQt5           import uic
+
+import sys, time, os
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        uic.loadUi('../share/i3lcc/i3lcc.qt5ui', self)
+        self.setWindowIcon(QIcon('../share/icons/locolor/scalable/i3lcc.svg'))
+
+        # Restrict all color lineEdits to 6 char max, hexidecimal colors. This is done so they can easily be converted into color values
+        self.line_color.setValidator(QRegExpValidator(QRegExp('[a-fA-F0-9]{0,6}')))     # Background color lineEdit
+        self.line_color_on.setValidator(QRegExpValidator(QRegExp('[a-fA-F0-9]{0,6}')))  # Outside Neutral color lineEdit
+        self.line_color_in.setValidator(QRegExpValidator(QRegExp('[a-fA-F0-9]{0,6}')))  # Inside Neutral color lineEdit
+        self.line_color_ov.setValidator(QRegExpValidator(QRegExp('[a-fA-F0-9]{0,6}')))  # Outside Verifying color lineEdit
+        self.line_color_iv.setValidator(QRegExpValidator(QRegExp('[a-fA-F0-9]{0,6}')))  # Inside Verifying color lineEdit
+        self.line_color_oi.setValidator(QRegExpValidator(QRegExp('[a-fA-F0-9]{0,6}')))  # Outside Incorrect color lineEdit
+        self.line_color_ii.setValidator(QRegExpValidator(QRegExp('[a-fA-F0-9]{0,6}')))  # Inside Incorrect color lineEdit
+
+        self.check_screenshot.clicked.connect(self.disable_check_color)
+        self.check_color.clicked.connect(self.disable_check_screenshot)
+
+        self.tbtn_image.clicked.connect(self.image_picker)
+        self.button_apply.clicked.connect(self.show_command_dialog)
+        self.button_about.clicked.connect(self.about_dialog)
+        self.button_quit.clicked.connect(self.quit)
+        self.button_preview.clicked.connect(self.preview)
+
+    # Func to call i3lock-color using all the flags provided
+    def preview(self):
+        self.update_info()
+        os.system(self.command + "--no-verify")
+        print("Preview command: " + self.command + "--no-verify")
+
+    # Update all vars by figuring out what GUI elements are switched on/off
+    def update_info(self):
+        self.get_background()
+        self.get_checkboxes()
+        self.get_indicatorvis()
+        self.get_ringwidth()
+        self.get_radius()
+        self.get_colors()
+
+        self.command = 'i3lock --veriftext="" --wrongtext="" --locktext="" --noinputtext="" ' + self.checkboxes + self.background + self.indicatorvis + self.radius + self.ringwidth + self.colors
+
+    def disable_check_screenshot(self): 
+        self.check_screenshot.setChecked(False)
+
+    def disable_check_color(self):
+        self.check_color.setChecked(False)
+
+    def get_background(self):
+        if self.check_image.isChecked():
+            self.image = self.line_image.text()
+            if os.path.isfile(self.image) and self.radio_imagecorner.isChecked():
+                self.image = '--image="' + str(self.image) + '" '
+            elif os.path.isfile(self.image) and self.radio_imagecenter.isChecked():
+                self.image = '--image="' + str(self.image) + '" --centered '
+            elif os.path.isfile(self.image) and self.radio_imagetile.isChecked():
+                self.image = '--image="' + str(self.image) + '" --tiling '
+            else:
+                self.image = ''
+        else:
+            self.image = ''
+
+        if self.check_screenshot.isChecked():
+            if self.combo_screenshot.currentIndex() == 0:
+                blur_value = str(self.spin_screenshot.value() / 10)
+                self.background = self.image + '--color="00000000" --blur="' + blur_value + '" '
+        else:
+            # Take the decimal val from the spinbox, then convert it to a hexidecimal string (eg. 50 becomes 7F)
+            color_transparency = self.dec2hex(self.spin_color.value())
+
+            # The color text box only allows hexidecimal chars, if the user inputs less than 6 chars, it will default to 000000
+            if len(self.line_color.text()) < 6:
+                self.line_color.setText('000000')
+
+            # Set the color flag based on what is in the color text box and the calculated hex value for the transparency based on the spinbox value
+            self.background = self.image + '--color="' + self.line_color.text() + color_transparency + '" '
+
+
+    # If the Enable indicator group box is checked, check if always enabled.
+    def get_indicatorvis(self):
+        if self.check_enableindicator.isChecked():
+            # If always enabled, set the CLI flag
+            if self.check_indicatorvis.isChecked():
+                self.indicatorvis = '--indicator '
+            # If not, set it to nothing (the default is to only display when text is being typed)
+            else:
+                self.indicatorvis = ''
+        # If unchecked, set the flag to not display it at all
+        else:
+            self.indicatorvis = '--no-unlock-indicator '
+
+    # Check which checkboxes are selected and set the i3lock-color flags accordingly
+    def get_checkboxes(self):
+        if self.check_separatorlines.isChecked():
+            separatorlines = ''
+        else:
+            separatorlines = '--separatorcolor="00000000" '
+
+        if self.check_ringlines.isChecked():
+            ringlines = ''
+        else:
+            ringlines = '--linecolor="00000000" '
+
+        if self.check_allowpower.isChecked():
+            allowpower = '--pass-power-keys '
+        else:
+            allowpower = ''
+
+        if self.check_allowvolume.isChecked():
+            allowvolume = '--pass-volume-keys '
+        else:
+            allowvolume = ''
+
+        if self.check_allowmedia.isChecked():
+            allowmedia = '--pass-media-keys '
+        else:
+            allowmedia = ''
+
+        if self.check_allowbrightness.isChecked():
+            allowbrightness = '--pass-screen-keys '
+        else:
+            allowbrightness = ''
+
+        if not self.check_fork.isChecked():
+            fork = '--nofork '
+        else:
+            fork = ''
+
+        if self.check_mouse.isChecked():
+            mousevis = '--pointer=default '
+        else:
+            mousevis = ''
+
+        if self.check_clockenable.isChecked():
+            clock = '--clock --timestr="' + self.line_clocktime.text() + '" --datestr="' + self.line_clockdate.text() + '" '
+            if self.check_clockvis.isChecked():
+                clock = '--force-clock --timestr="' + self.line_clocktime.text() + '" --datestr="' + self.line_clockdate.text() + '" '
+        else:
+            clock = ''
+
+        self.checkboxes = separatorlines + ringlines + allowpower + allowvolume + allowmedia + allowbrightness + fork + mousevis + clock
+
+    # Set the radius to the value set in the Radius spin box
+    def get_radius(self):
+        self.radius = '--radius="' + str(self.spin_radius.value()) + '" '
+
+    # Set the ring width to the value set in the 
+    def get_ringwidth(self):
+        self.ringwidth = '--ring-width="' + str(self.spin_ringwidth.value()) + '" '
+
+    def get_colors(self):
+        # Outside Neutral color
+        if len(self.line_color_on.text()) < 6:
+            self.line_color_on.setText('000000')
+        color_on_transparency = self.dec2hex(self.spin_color_on.value())
+        color_on = '--ringcolor="' + self.line_color_on.text() + color_on_transparency + '" '
+
+        # Inside Neutral color
+        if len(self.line_color_in.text()) < 6:
+            self.line_color_in.setText('000000')
+        color_in_transparency = self.dec2hex(self.spin_color_in.value())
+        color_in = '--insidecolor="' + self.line_color_in.text() + color_in_transparency + '" '
+
+        # Outside Verifying color
+        if len(self.line_color_ov.text()) < 6:
+            self.line_color_ov.setText('000000')
+        color_ov_transparency = self.dec2hex(self.spin_color_ov.value())
+        color_ov = '--ringvercolor="' + self.line_color_ov.text() + color_ov_transparency + '" '
+
+        # Inside Verifying color
+        if len(self.line_color_iv.text()) < 6:
+            self.line_color_iv.setText('000000')
+        color_iv_transparency = self.dec2hex(self.spin_color_iv.value())
+        color_iv = '--insidevercolor="' + self.line_color_iv.text() + color_iv_transparency + '" '
+
+        # Outside Incorrect color
+        if len(self.line_color_oi.text()) < 6:
+            self.line_color_oi.setText('000000')
+        color_oi_transparency = self.dec2hex(self.spin_color_oi.value())
+        color_oi = '--ringwrongcolor="' + self.line_color_oi.text() + color_oi_transparency + '" '
+
+        # Inside Incorrect color
+        if len(self.line_color_ii.text()) < 6:
+            self.line_color_ii.setText('000000')
+        color_ii_transparency = self.dec2hex(self.spin_color_ii.value())
+        color_ii = '--insidewrongcolor="' + self.line_color_ii.text() + color_ii_transparency + '" '
+
+        # Clock time color
+        if len(self.line_color_time.text()) < 6:
+            self.line_color_time.setText('000000')
+        color_time_transparency = self.dec2hex(self.spin_color_time.value())
+        color_time = '--timecolor="' + self.line_color_time.text() + color_time_transparency + '" '
+
+        # Clock time color
+        if len(self.line_color_date.text()) < 6:
+            self.line_color_date.setText('000000')
+        color_date_transparency = self.dec2hex(self.spin_color_date.value())
+        color_date = '--datecolor="' + self.line_color_date.text() + color_date_transparency + '" '
+
+        self.colors = color_on + color_in + color_ov + color_iv + color_oi + color_ii + color_time + color_date
+
+    def color_picker(self):
+        colordialog = QColorDialog(self)
+        colordialog.exec_()
+        color = colordialog.selectedColor().name()
+        self.line_color.setText(color.upper())
+
+    def image_picker(self):
+        image = QFileDialog.getOpenFileName(self, "Select image location", '~', 'PNG images (*.png)')[0]
+        self.line_image.setText(image)
+
+    def show_command_dialog(self):
+        self.update_info()
+
+        print("Final command: " + self.command)
+
+        command_dialog = QMessageBox()
+        command_dialog.setText("Copy and paste generated command into your i3 config")
+        command_dialog.setDetailedText(self.command)
+        command_dialog.setStandardButtons(QMessageBox.Close)
+
+        command_dialog.exec_()
+
+    def about_dialog(self):
+        about_dialog = QMessageBox()
+        about_dialog.setText("i3lcc (i3lock-color configuratorintor)")
+        about_dialog.setInformativeText("A simple program for configuring i3lock-color.\n\nCopyright (C) 2020 Mathew R Gordon")
+
+        about_dialog.exec_()
+
+    # Function to convert a 0-100 percentage value into a 00-FF hexadecimal value
+    def dec2hex(self, decimal):
+        hex = str(format(round(decimal*2.55), '02x')).upper()
+        return(hex)
+
+    def quit(self):
+        app.quit()
+
+if __name__=="__main__":
+    app=QApplication(sys.argv)
+    ex = MainWindow()
+    ex.show()
+    sys.exit(app.exec_())
