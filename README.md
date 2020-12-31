@@ -8,7 +8,7 @@ This is in very early development, I highly recommend launching from a terminal 
 
 ### Dependencies:
 ```
-pyqt5 python3 imagemagick i3lock-color
+pyqt5 python3 imagemagick i3lock-color libnotify-bin
 ```
 
 ## Short term goals:
