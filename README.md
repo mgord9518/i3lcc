@@ -13,7 +13,7 @@ pyqt5 python3 imagemagick i3lock-color libnotify-bin
 
 ## Short term goals:
   * Detect whether i3lock-color and imagemagick are on the system, display an error message if not found
-  * Add background screenshot filters using imagemagick (blur, pixelation)
+  * Add background screenshot filters using imagemagick (blur)
   * Add support for more of i3lock-color's functions (such as editing greeter text) instead of just automatically disabling them
   * Find and squash bugs
   * Tweak and purdify code (especially getting rid of old, deprecated code)
