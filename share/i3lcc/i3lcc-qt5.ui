@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>555</width>
-    <height>594</height>
+    <width>500</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -65,7 +65,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="check_color">
+         <widget class="QGroupBox" name="bg_color">
           <property name="toolTip">
            <string>Display a solid or transparent color instead of a filtered screenshot. Use this if you have a blurring compositor or want a solid color as a background</string>
           </property>
@@ -87,91 +87,35 @@
             </widget>
            </item>
            <item>
-            <widget class="QFrame" name="frame_color">
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
+            <widget class="QLineEdit" name="color">
+             <property name="styleSheet">
+              <string notr="true"/>
              </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+             <property name="inputMask">
+              <string/>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0">
-                <property name="spacing">
-                 <number>3</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLineEdit" name="line_color">
-                  <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
-                  <property name="inputMask">
-                   <string/>
-                  </property>
-                  <property name="text">
-                   <string>000000</string>
-                  </property>
-                  <property name="maxLength">
-                   <number>32767</number>
-                  </property>
-                  <property name="frame">
-                   <bool>true</bool>
-                  </property>
-                  <property name="readOnly">
-                   <bool>false</bool>
-                  </property>
-                  <property name="placeholderText">
-                   <string>Enter HEX color value</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="spin_color">
-                  <property name="toolTip">
-                   <string>Color opacity value (brigter colors may be rendered as more opaque depending on your compositor, so choose dark colors if you want more transparency)</string>
-                  </property>
-                  <property name="frame">
-                   <bool>true</bool>
-                  </property>
-                  <property name="maximum">
-                   <number>100</number>
-                  </property>
-                  <property name="singleStep">
-                   <number>5</number>
-                  </property>
-                  <property name="value">
-                   <number>50</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="check_screenshot">
+         <widget class="QGroupBox" name="bg_screenshot">
           <property name="toolTip">
            <string>Take a screenshot of the desktop and filter it instead of using a solid or transparent color. Use this if you don't have a blurring compositor or want a differnet effect. May be slow to start on high definition screens</string>
           </property>
@@ -234,7 +178,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="spin_screenshot">
+               <widget class="QSpinBox" name="bg_mode_intensity">
                 <property name="maximum">
                  <number>100</number>
                 </property>
@@ -253,7 +197,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="check_image">
+         <widget class="QGroupBox" name="bg_image">
           <property name="toolTip">
            <string>Show a selected image over the background. This can be used to show an icon in the middle (such as a lock), or to completely cover the background (incompatable with imagemagick effects)</string>
           </property>
@@ -306,7 +250,7 @@
                  <number>2</number>
                 </property>
                 <item>
-                 <widget class="QLineEdit" name="line_image">
+                 <widget class="QLineEdit" name="image">
                   <property name="toolTip">
                    <string/>
                   </property>
@@ -326,10 +270,10 @@
                    <bool>true</bool>
                   </property>
                   <property name="readOnly">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                   <property name="placeholderText">
-                   <string>Select image file</string>
+                   <string>Image path</string>
                   </property>
                  </widget>
                 </item>
@@ -358,7 +302,7 @@
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <widget class="QRadioButton" name="radio_imagecorner">
+               <widget class="QRadioButton" name="corner">
                 <property name="toolTip">
                  <string>Align the image background in the top left corner</string>
                 </property>
@@ -371,7 +315,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="radio_imagecenter">
+               <widget class="QRadioButton" name="centered">
                 <property name="toolTip">
                  <string>Align the image background in the center</string>
                 </property>
@@ -379,17 +323,20 @@
                  <string>Center</string>
                 </property>
                 <property name="checked">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="radio_imagetile">
+               <widget class="QRadioButton" name="tiling">
                 <property name="toolTip">
                  <string>Tile the image across the screen (good for small images or patterns)</string>
                 </property>
                 <property name="text">
                  <string>Tile</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -432,7 +379,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="check_enableindicator">
+         <widget class="QGroupBox" name="unlock_indicator">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -471,9 +418,9 @@
             <number>9</number>
            </property>
            <item>
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="ringwidthlabel">
              <property name="text">
-              <string>Ring width: </string>
+              <string>Radius</string>
              </property>
             </widget>
            </item>
@@ -499,7 +446,7 @@
            <item>
             <widget class="QLabel" name="label">
              <property name="text">
-              <string>Radius: </string>
+              <string>Ring width</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -554,39 +501,13 @@
                    <property name="sizeHint" stdset="0">
                     <size>
                      <width>20</width>
-                     <height>0</height>
+                     <height>40</height>
                     </size>
                    </property>
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="check_separatorlines">
-                   <property name="toolTip">
-                    <string>Lines that show up on the key press indicator</string>
-                   </property>
-                   <property name="text">
-                    <string>Separator lines</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="check_ringlines">
-                   <property name="toolTip">
-                    <string>Lines that show up between the circle and the outside ring</string>
-                   </property>
-                   <property name="text">
-                    <string>Ring lines</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="check_ignorepassword">
+                  <widget class="QCheckBox" name="ignore_empty_password">
                    <property name="toolTip">
                     <string>Do not validate an empty password as input. This is useful if you wake up your computer display by using the [ENTER] key</string>
                    </property>
@@ -599,7 +520,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="check_indicatorvis">
+                  <widget class="QCheckBox" name="indicator">
                    <property name="toolTip">
                     <string>When enabled, the indicator will always be shown instead of only showing on input</string>
                    </property>
@@ -627,35 +548,16 @@
        <attribute name="title">
         <string>Indicator colors</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Outside neutral:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_color_2">
+         <widget class="QFrame" name="frame_4">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Plain</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <layout class="QVBoxLayout" name="verticalLayout_11">
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -666,81 +568,243 @@
             <number>0</number>
            </property>
            <property name="bottomMargin">
-            <number>10</number>
+            <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
-             <property name="spacing">
-              <number>2</number>
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Ring neutral</string>
              </property>
-             <property name="bottomMargin">
-              <number>0</number>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="ringcolor">
+             <property name="toolTip">
+              <string>The ring will change this color if the password is accepted</string>
              </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_on">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>FFFFFF</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_on">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>Inside neutral</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="insidecolor">
+             <property name="toolTip">
+              <string>The inside circle will change this color if the password is accepted</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>Ring verifying</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="ringvercolor">
+             <property name="toolTip">
+              <string>The ring will change this color while the password is being verified</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Inside verifying</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="insidevercolor">
+             <property name="toolTip">
+              <string>The inside circle will change this color while the password is being verified</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Ring wrong password</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="ringwrongcolor">
+             <property name="toolTip">
+              <string>The ring will change this color when a wrong password is typed</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Inside wrong password</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="insidewrongcolor">
+             <property name="toolTip">
+              <string>The inside circle will change this color when a wrong password is typed</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Inside neutral:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_color_3">
+         <widget class="QFrame" name="frame_5">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Plain</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_10">
+          <layout class="QVBoxLayout" name="verticalLayout_15">
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -751,417 +815,163 @@
             <number>0</number>
            </property>
            <property name="bottomMargin">
-            <number>10</number>
+            <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <property name="spacing">
-              <number>2</number>
+            <widget class="QLabel" name="label_15">
+             <property name="text">
+              <string>Key highlight color</string>
              </property>
-             <property name="bottomMargin">
-              <number>0</number>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="keyhlcolor">
+             <property name="toolTip">
+              <string>The color shown when the user types a key</string>
              </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_in">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>000000</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_in">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>50</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>Key backspace color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="bshlcolor">
+             <property name="toolTip">
+              <string>The color shown when the user presses backspace</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Ring line color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="linecolor">
+             <property name="toolTip">
+              <string>The color that separates the inner circle from the ring</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>Separator color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="separatorcolor">
+             <property name="toolTip">
+              <string>The color of the separator, which sits at both ends of the key highlight</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="inputMask">
+              <string/>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Outside verifying:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_color_4">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_12">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>10</number>
-           </property>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_13">
-             <property name="spacing">
-              <number>2</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_ov">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>FFFF00</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_ov">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Inside verifying:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_color_7">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_18">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>10</number>
-           </property>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_19">
-             <property name="spacing">
-              <number>2</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_iv">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>202000</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_iv">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>50</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Outside incorrect password:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_color_5">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_14">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>10</number>
-           </property>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_15">
-             <property name="spacing">
-              <number>2</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_oi">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>FF0000</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_oi">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Inside incorrect password:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_color_6">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_16">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>10</number>
-           </property>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_17">
-             <property name="spacing">
-              <number>2</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_ii">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>200000</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_ii">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>50</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -1183,7 +993,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="check_clockenable">
+         <widget class="QGroupBox" name="clock">
           <property name="title">
            <string>Display clock</string>
           </property>
@@ -1217,9 +1027,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="line_clocktime">
+            <widget class="QLineEdit" name="timestr">
              <property name="text">
-              <string>%H:%M:%S</string>
+              <string/>
              </property>
              <property name="placeholderText">
               <string>Example: %H:%M%S (24 hour clock)</string>
@@ -1237,9 +1047,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="line_clockdate">
+            <widget class="QLineEdit" name="datestr">
              <property name="text">
-              <string>%Y-%m-%d</string>
+              <string/>
              </property>
              <property name="placeholderText">
               <string>Example: %Y-%m-%d (ISO date format)</string>
@@ -1270,58 +1080,29 @@
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_20">
-             <property name="spacing">
-              <number>2</number>
+            <widget class="QLineEdit" name="timecolor">
+             <property name="styleSheet">
+              <string notr="true"/>
              </property>
-             <property name="bottomMargin">
-              <number>0</number>
+             <property name="inputMask">
+              <string/>
              </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_time">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>FFFFFF</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_time">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_13">
@@ -1331,58 +1112,29 @@
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_21">
-             <property name="spacing">
-              <number>2</number>
+            <widget class="QLineEdit" name="datecolor">
+             <property name="styleSheet">
+              <string notr="true"/>
              </property>
-             <property name="bottomMargin">
-              <number>0</number>
+             <property name="inputMask">
+              <string/>
              </property>
-             <item>
-              <widget class="QLineEdit" name="line_color_date">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="inputMask">
-                <string/>
-               </property>
-               <property name="text">
-                <string>FFFFFF</string>
-               </property>
-               <property name="maxLength">
-                <number>32767</number>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="readOnly">
-                <bool>false</bool>
-               </property>
-               <property name="placeholderText">
-                <string>Enter HEX color value</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spin_color_date">
-               <property name="toolTip">
-                <string>Color opacity value (brigter colors are rendered as more opaque, so choose dark colors if you want more visibility)</string>
-               </property>
-               <property name="frame">
-                <bool>true</bool>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>5</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="maxLength">
+              <number>32767</number>
+             </property>
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Enter 3-4 byte HEX value</string>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="verticalSpacer_3">
@@ -1398,7 +1150,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QCheckBox" name="check_clockvis">
+            <widget class="QCheckBox" name="force_clock">
              <property name="toolTip">
               <string>When enabled, the clock will always show instead of being hidden during verification or a wrong password entered</string>
              </property>
@@ -1438,35 +1190,212 @@
            <string>Misc</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
-           <property name="leftMargin">
-            <number>9</number>
-           </property>
-           <property name="topMargin">
-            <number>9</number>
-           </property>
-           <property name="rightMargin">
-            <number>9</number>
-           </property>
-           <property name="bottomMargin">
-            <number>9</number>
-           </property>
            <item>
-            <widget class="QCheckBox" name="check_mouse">
+            <widget class="QLabel" name="label_25">
+             <property name="text">
+              <string>No input text</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="noinputtext">
+             <property name="placeholderText">
+              <string>Text when the user presses backspace on an empty password</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_6">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QFrame" name="frame_7">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_16">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>3</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_2">
+                   <property name="text">
+                    <string>Greeter text</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="greetertext">
+                   <property name="placeholderText">
+                    <string>Text under indicator</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_21">
+                   <property name="text">
+                    <string>Verifying text</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="veriftext">
+                   <property name="placeholderText">
+                    <string>Text inside indicator when verifying</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_23">
+                   <property name="text">
+                    <string>Wrong text</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="wrongtext">
+                   <property name="placeholderText">
+                    <string>Text inside indicator when wrong</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_8">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_17">
+                 <property name="leftMargin">
+                  <number>3</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_20">
+                   <property name="text">
+                    <string>Greeter color</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="greetercolor">
+                   <property name="placeholderText">
+                    <string>Enter 3-4 byte HEX value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_22">
+                   <property name="text">
+                    <string>Verifying color</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="verifcolor">
+                   <property name="placeholderText">
+                    <string>Enter 3-4 byte HEX value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_24">
+                   <property name="text">
+                    <string>Wrong / no input color</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="wrongcolor">
+                   <property name="placeholderText">
+                    <string>Enter 3-4 byte HEX value</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="pointer">
              <property name="toolTip">
               <string>Keeps the mouse pointer visible on the screen while locked</string>
              </property>
              <property name="text">
-              <string>Keep mouse visible</string>
+              <string>Keep mouse pointer visible</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="check_allowpower">
+            <widget class="QCheckBox" name="pass_power_keys">
              <property name="toolTip">
               <string>Allows power buttons to be used while the screen is locked</string>
              </property>
              <property name="text">
-              <string>Allow power buttons</string>
+              <string>Pass power keys</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -1474,12 +1403,12 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="check_allowvolume">
+            <widget class="QCheckBox" name="pass_volume_keys">
              <property name="toolTip">
               <string>Allows volume buttons to be used while the screen is locked</string>
              </property>
              <property name="text">
-              <string>Allow volume buttons</string>
+              <string>Pass volume keys</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -1487,12 +1416,12 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="check_allowmedia">
+            <widget class="QCheckBox" name="pass_media_keys">
              <property name="toolTip">
               <string>Allows media buttons to be used while the screen is locked</string>
              </property>
              <property name="text">
-              <string>Allow media buttons</string>
+              <string>Pass media keys</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -1500,12 +1429,12 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="check_allowbrightness">
+            <widget class="QCheckBox" name="pass_screen_keys">
              <property name="toolTip">
               <string>Allows screen brightness buttons to be used while the screen is locked</string>
              </property>
              <property name="text">
-              <string>Allow screen brightness buttons</string>
+              <string>Pass screen brightness keys</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -1513,7 +1442,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="check_fork">
+            <widget class="QCheckBox" name="fork">
              <property name="toolTip">
               <string>Fork the process after starting</string>
              </property>
@@ -1526,12 +1455,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkBox_6">
-             <property name="toolTip">
-              <string>Automatically turn off screen using DPMS. Note that if not disabled on your X server, DPMS will automatically turn off your screen anyway</string>
-             </property>
+            <widget class="QCheckBox" name="beep">
              <property name="text">
-              <string>Enable DPMS</string>
+              <string>Enable beep</string>
              </property>
             </widget>
            </item>
@@ -1551,12 +1477,24 @@
            <item>
             <widget class="QFrame" name="frame_2">
              <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+              <enum>QFrame::NoFrame</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QPushButton" name="pushButton">
                 <property name="text">
@@ -1637,6 +1575,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="button_default">
+         <property name="toolTip">
+          <string>Reset all settings to their default values</string>
+         </property>
          <property name="text">
           <string>Defaults</string>
          </property>
@@ -1659,9 +1600,7 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>line_color</tabstop>
-  <tabstop>spin_color</tabstop>
-  <tabstop>line_image</tabstop>
+  <tabstop>image</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>
