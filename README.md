@@ -16,12 +16,7 @@ pyqt5 python3 imagemagick i3lock-color libnotify-bin
   * Add more background screenshot filters using imagemagick (blur)
   * Find and squash bugs
   * Tweak and purdify code (especially getting rid of old, deprecated code)
-  * Create a simple user-install script
 
 ## Mid term goals:
   * Create AUR and DEB packages (and maybe Flatpak? Fuck Snap.)
-  * Add support for saving settings in a user config file, and a system-wide default config
   * Add support for more image formats using imagemagick
-
-## Long term goals:
-  * Is this really a long term project? Perfect and refine it I guess
