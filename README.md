@@ -3,10 +3,15 @@ The mildly useful project nobody asked for! Configuration program for i3lock-col
 
 ![example](preview.png)
 
-To use, set './bin/i3lcc' as executable and run it.
+## Quick installation
+```bash
+wget https://raw.githubusercontent.com/mgord9518/i3lcc/main/install.bash -O - 2>/dev/null | bash
+```
+It can also be run directly if downloaded from github if the file structure is kept the same.
+
 This is in very early development, I highly recommend launching from a terminal so Python error messages can be read
 
-### Dependencies:
+### Dependencies
 ```
 pyqt5 python3 imagemagick i3lock-color libnotify-bin
 ```
