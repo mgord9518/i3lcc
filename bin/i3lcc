@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2020-2021 Mathew R Gordon <https://github.com/mgord9518>
+# Copyright (C) 2020-2021 Mathew R Gordon
+# <https://github.com/mgord9518>
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,54 +13,56 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-# VERSON 0.4
+# VERSON 0.4.6
 # This program is in early development and is very likely to have bugs
 # and lack features. Push requests and constructive criticism always
 # welcome!
 
 # CHANGELOG:
-# * Renamed variables to be somewhat consistant with i3lock-color
-#   exceptions are any flags that begin with "no", to avoid a double
-#   negative, which makes no sense in a config file or in the code
-# * Replaced more redundant code with for loops, now that there is a
-#   common naming convention, although the solution is a bit hacky,
-#   but better than a huge blocks of redundancy
-# * Added an option for changing the greeter, verifying and wrong
-#   text.
-# * Added a command line option to automatically load the default on
-#   launch
-# * Added an option to add greeter, no input, verif, and wrong text,
-#   along with their colors
-# * Config now saves window size
-
-# NOTICE:
-# * There is still deprecated code that needs to be fixed/removed
-# * I also plan on renaming all of the flags to be more consistant
-#   with the i3lock-color command flags and with each other.
+# * Changed the location of the icon to the correct directory, which
+#   should have been ./usr/share/icons/locolor/apps/i3lcc.svg instead
+#   of ./usr/share/icons/locolor/i3lcc.svg
+# * Visual changes. Removed the 'indicator colors' tab and merged it
+#   with the 'indicator' tab
+# * More restructuring of the code, but this shouldn't change how it
+#   behaves. I plan on adding more features once the code looks half
+#   decent and still functions.
+# * Renamed a few variables to make them slightly more descriptive but 
+#   very likely to rename again in the near furture.
+# * Simplified some functions
+# * Simplified the imagemagick output into one sed command
+# * Added a version command line option
+# * Fixed a bug that caused
+# * Changed window title from "i3lcc" to "i3lock-color 
+#   configuratorinator", although the title wouldn't likely even be
+#   seen while using i3 in the first place
+# * Fixed a bug that caused the window size to reset to default when
+#   'defaults' button was clicked.
 
 import json
 import os
 import sys
 import time
-from shutil import which
 
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-
 class CLI():
     def cmd_options(self):
         global default_settings
+        global versionnum
         default_settings = False
+        versionnum = "0.4.6"
 
         helptext = '''Usage: %s [OPTION]...
 Configuration program for i3lock-color
 
   -h, --help            Show this help and exit
-  -r, --run             Execute i3lock-color with the saved configuration
   -d, --defaults        Run %s with default settings
+  -r, --run             Execute i3lock-color with the saved configuration
+      --version         Show the version and exit
 '''.format(length='multi-line', ordinal='second')%(2 * (sys.argv[0],))
 
         for option in sys.argv:
@@ -70,7 +73,9 @@ Configuration program for i3lock-color
                 self.run_command()
             elif option == '-d' or option == '-defaults' or option == '--defaults':
                 default_settings = True
-
+            elif option == '-version' or option == '--version':
+                print("%s version: %s"%(sys.argv[0], versionnum))
+                exit(0)
             elif not option == sys.argv[0]:
                 print("%s: unrecognized option '%s'"%(sys.argv[0], option))
                 print("Try '%s --help' for more information."%(sys.argv[0]))
@@ -84,19 +89,14 @@ Configuration program for i3lock-color
         if os.path.isfile('%s/run.bash'%(config_dir)):
             script = '%s/run.bash'%(config_dir)
         # Otherwise, use the default
-        else:
+        elif os.path.isfile('../share/i3lcc/run.bash'):
             script = '../share/i3lcc/run.bash'
-
-        print(script)
-
-        if not os.path.isfile(script):
+        else:
             print("FATAL: No user config script or default config script found!")
             exit(1)
 
         os.chmod(script, 0o0755)
         os.system(script)
-
-        # os.system(ex.get_command())
 
         exit(0)
 
@@ -115,18 +115,17 @@ Configuration program for i3lock-color
 
     def get_config(self):
         config_dir = self.get_config_dir()
-        # Check if the user config exists and use it if it does
         if os.path.isfile('%s/config.json'%(config_dir)):
             config_file = '%s/config.json'%(config_dir)
-        # Otherwise, use the default
-        else:
+            self.default_config_file = '../share/i3lcc/config.json'
+        elif os.path.isfile('../share/i3lcc/config.json'):
             config_file = '../share/i3lcc/config.json'
-
-        self.default_config_file = '../share/i3lcc/config.json'
-        if not os.path.isfile(config_file):
+            self.default_config_file = '../share/i3lcc/config.json'
+        else:
             print("FATAL: No user config or default config file found!")
             exit(1)
-
+	
+        print("Loaded config: %s"%(config_file))
         with open(config_file, 'r') as json_object:
             config_data = json.load(json_object)
         return(config_data)
@@ -137,11 +136,23 @@ class MainWindow(QMainWindow):
 
         super(MainWindow, self).__init__()
         uic.loadUi('../share/i3lcc/i3lcc-qt5.ui', self)
-        self.setWindowIcon(QIcon('../share/icons/locolor/scalable/i3lcc.svg'))
+        self.setWindowIcon(QIcon('../share/icons/locolor/scalable/apps/i3lcc.svg'))
+        self.setWindowTitle("i3lock-color configuratorinator")
 
         # Get the config dictionary from the JSON config file
         self.configdict = cli.get_config()
 
+        # Connect buttons to their respective functions
+        self.tbtn_image.clicked.connect(self.image_picker)
+        self.button_apply.clicked.connect(self.save_config)
+        self.button_about.clicked.connect(self.about_dialog)
+        self.button_quit.clicked.connect(self.quit)
+        self.button_preview.clicked.connect(self.preview)
+        self.button_default.clicked.connect(self.load_defaults)
+        self.tabWidget.setCurrentIndex(self.configdict['current_tab'])
+        self.resize(self.configdict['window_width'], self.configdict['window_height'])
+
+        # Load defaults if enabled (the 'default_settings = False' line is to prevent recursion)
         if default_settings:
             default_settings = False
             self.load_defaults()
@@ -149,64 +160,43 @@ class MainWindow(QMainWindow):
             self.init_widgets()
 
     def init_widgets(self):
+        # Set the default image position to be in the corner, if checked otherwise, this will be overridden.
+        self.corner.setChecked(True)
+        self.bg_screenshot.clicked.connect(self.get_screenshot)
+        self.bg_color.clicked.connect(self.get_background)
         # Restrict all color lineEdits to 6 char max, hexidecimal colors. This is done so they can easily be converted into color values
         validator = QRegExpValidator(QRegExp('[a-fA-F0-9]{0,8}'))
-
-        self.corner.setChecked(True)
-
-        self.bg_screenshot.clicked.connect(self.disable_bg_color)
-        self.bg_color.clicked.connect(self.disable_bg_screenshot)
-
-        for w in self.tabWidget.findChildren(QCheckBox):
-            flag = self.configdict[w.objectName()]
-            if flag:
-                w.setChecked(True)
-
-        for w in self.tabWidget.findChildren(QRadioButton):
-            if not w.objectName() == "corner" and self.configdict[w.objectName()]:
-                w.setChecked(True)
-
-        for w in self.tabWidget.findChildren(QGroupBox):
-            if w.isCheckable():
-                if self.configdict[w.objectName()]:
-                    w.setChecked(True)
-                else:
-                    w.setChecked(False)
-
-        for w in self.tabWidget.findChildren(QLineEdit):
-            if "color" in w.objectName():
-                w.setText(self.configdict[w.objectName()])
-                w.setValidator(validator)
-            elif "text" in w.objectName() or "str" in w.objectName():
-                w.setText(self.configdict[w.objectName()])
+        # Set widgets to the correct values according to the config file
+        for c in self.tabWidget.findChildren(QCheckBox):
+            if self.configdict[c.objectName()]:
+                c.setChecked(True)
+        for r in self.tabWidget.findChildren(QRadioButton):
+            if not r.objectName() == "corner" and self.configdict[r.objectName()]:
+                r.setChecked(True)
+        for g in self.tabWidget.findChildren(QGroupBox):
+            if g.isCheckable() and self.configdict[g.objectName()]:
+                g.setChecked(True)
+            elif g.isCheckable():
+                g.setChecked(False)
+        for l in self.tabWidget.findChildren(QLineEdit):
+            if "color" in l.objectName():
+                l.setText(self.configdict[l.objectName()])
+                l.setValidator(validator)
+            elif "text" in l.objectName() or "str" in l.objectName() or l.objectName() == "image":
+                l.setText(self.configdict[l.objectName()])
 
         self.combo_screenshot.currentIndexChanged.connect(self.update_info)
         self.bg_image.clicked.connect(self.update_info)
 
-        self.tbtn_image.clicked.connect(self.image_picker)
-        self.button_apply.clicked.connect(self.save_config)
-        self.button_about.clicked.connect(self.about_dialog)
-        self.button_quit.clicked.connect(self.quit)
-        self.button_preview.clicked.connect(self.preview)
-        self.button_default.clicked.connect(self.load_defaults)
-
-        # Set all widgets according to the config values
-        self.tabWidget.setCurrentIndex(self.configdict['current_tab'])
-        self.resize(self.configdict['window_width'], self.configdict['window_height'])
-
         # Background tab
-        # self.color.setText(self.configdict['color'])
-        self.image.setText(self.configdict['image'])
         if self.configdict['bg_mode'] == 'i3lockblur':
             self.combo_screenshot.setCurrentIndex(0)
         elif self.configdict['bg_mode'] == 'magickpixelate':
             self.combo_screenshot.setCurrentIndex(1)
-            self.bg_image.setChecked(False)
 
     # Func to call i3lock-color using all the flags provided
     def preview(self):
-        self.update_info()
-        preview_command = self.command + "--no-verify"
+        preview_command = self.get_command() + "--no-verify"
         print("Preview command: %s"%(preview_command))
         os.system(preview_command)
 
@@ -218,27 +208,52 @@ class MainWindow(QMainWindow):
     def update_info(self):
         # Define the command and the config dictionary, self.command will be the final shell command issued
         # the user. self.configdict will be converted to JSON and used to restore settings.
-        self.command = ''
         self.configdict['current_tab'] = self.tabWidget.currentIndex()
-        self.configdict['window_width'] = self.width()
-        self.configdict['window_height'] = self.height()
         self.get_background()
         self.get_checkboxes()
         self.get_size()
-        self.get_colors()
 
-    def disable_bg_screenshot(self): 
-        self.bg_screenshot.setChecked(False)
-        self.configdict['bg_screenshot'] = False
-        self.get_background()
-
-    def disable_bg_color(self):
+    def get_screenshot(self):
+        # Call the correct function depending on whether the user has selected the screenshot or color option
         self.bg_color.setChecked(False)
         self.configdict['bg_color'] = False
-        self.get_background()
+        self.configdict['bg_screenshot'] = True
+        if self.combo_screenshot.currentIndex() == 0:
+            # Re-enable the image option if this is selected
+            self.bg_image.setEnabled(True)
+            intensity = str(round(self.bg_mode_intensity.value() / 10))
+            self.command += '-c 00000000 -B %s '%(intensity)
+            self.configdict['bg_mode'] = 'i3lockblur'
+            self.configdict['bg_mode_intensity'] = self.bg_mode_intensity.value()
+        elif self.combo_screenshot.currentIndex() == 1:
+            # Disable the image option if this is selected; they aren't compatible
+            self.bg_image.setEnabled(False)
+            # Divide the spinbox value by 4, then take it from 30. This gives a good range of different pixelation values
+            intensity = str(round(30 - self.bg_mode_intensity.value() / 4))
+            # A very long, ugly command to get the screen resolution in a bash variable 'R', capture a screenshot in BMP format because it was the fastest format I found in testing, scale it down to whatever level chosen, then scale it back up to the original size, finally pipe it into i3lock-color as raw RGB data
+            self.command = 'R=$(xdpyinfo|sed -rn "/dimensions/s/^[^0-9]*([0-9]+x[0-9]+).*$/\\1/p");import -silent -window root bmp:-|convert bmp:- -scale %s%% -scale $R\\! rgb:-|i3lock --raw $R:rgb --image /dev/stdin --locktext "" -c 00000000 '%(intensity)
+            self.configdict['bg_mode'] = 'magickpixelate'
+            self.configdict['bg_mode_intensity'] = self.bg_mode_intensity.value()
+
+    def get_color(self): 
+        for w in self.tabWidget.findChildren(QLineEdit):
+            if "color" in w.objectName():
+                # The color text box only allows hexidecimal chars, if the user inputs less than 8 chars, it will default to 00000000
+                if len(w.text()) < 8:
+                    w.setText('00000000')
+                lineedit = w.objectName()
+                self.configdict[lineedit] = w.text()
+                self.command += '--%s %s '%(lineedit, w.text())
+            elif "text" in w.objectName() or "str" in w.objectName():
+                lineedit = w.objectName()
+                self.configdict[lineedit] = w.text()
+                self.command += '--%s "%s" '%(lineedit, w.text())
+            elif w.objectName() == "image":
+                lineedit = w.objectName()
+                self.configdict[lineedit] = w.text()
 
     def get_background(self):
-        imageflag = ''
+        # Set imageflag as empty in case the user doesn't supply any image, otherwise an error will occour
         path = self.image.text()
         self.configdict['tiling'] = False
         self.configdict['centered'] = False
@@ -253,43 +268,21 @@ class MainWindow(QMainWindow):
         else:
             imageflag = '--image "%s" '%(path)
             self.configdict['bg_img_path'] = path
-
         self.command = 'i3lock --locktext "" '
-
-        if self.bg_image.isChecked() and os.path.isfile(path):
+        if self.bg_screenshot.isChecked() and not self.bg_color.isChecked():
+            self.get_screenshot()
+        elif self.bg_screenshot.isChecked() and self.bg_color.isChecked():
+            self.bg_screenshot.setChecked(False)
+            self.configdict['bg_screenshot'] = False
+            self.configdict['bg_color'] = True
+            self.bg_image.setEnabled(True)
+        # Check if the image exists (and if the background image checkbox is enabled), if it is, add it to the command
+        if self.bg_image.isChecked() and self.bg_image.isEnabled() and os.path.isfile(path):
             self.configdict['bg_image'] = True
             self.command += imageflag
         else:
             self.configdict['bg_image'] = False
-
-        if self.bg_screenshot.isChecked():
-            self.configdict['bg_screenshot'] = True
-            # self.configdict['bg_color'] = False
-            if self.combo_screenshot.currentIndex() == 0:
-                # Re-enable the image option if this is selected
-                self.bg_image.setEnabled(True)
-                intensity = str(round(self.bg_mode_intensity.value() / 10))
-                self.command += '-c 00000000 -B %s '%(intensity)
-                self.configdict['bg_mode'] = 'i3lockblur'
-                self.configdict['bg_mode_intensity'] = self.bg_mode_intensity.value()
-            elif self.combo_screenshot.currentIndex() == 1:
-                # Disable the image option if this is selected; they aren't compatible
-                self.bg_image.setEnabled(False)
-                # Divide the spinbox value by 4, then take it from 30. This gives a good range of different pixelation values
-                intensity = str(round(30 - self.bg_mode_intensity.value() / 4))
-                # A very long, ugly command to get the screen resolution in a bash variable 'R', capture a screenshot in BMP format because it was the fastest format I found in testing, scale it down to whatever level chosen, then scale it back up to the original size, finally pipe it into i3lock-color as raw RGB data
-                self.command = 'R=$(xdpyinfo | grep dimensions | sed -r "s/^[^0-9]*([0-9]+x[0-9]+).*$/\\1/");import -silent -window root bmp:- | convert bmp:- -scale %s%% -scale $R\\! rgb:- | i3lock --raw $R:rgb --image "/dev/stdin" --locktext "" -c 00000000 '%(intensity)
-                self.configdict['bg_mode'] = 'magickpixelate'
-                self.configdict['bg_mode_intensity'] = self.bg_mode_intensity.value()
-            # elif self.combo_screenshot.currentIndex() == 2:
-            #     self.bg_image.setEnabled(False)
-            #     self.configdict['bg_mode'] = 'magickblur'
-            #     self.configdict['bg_mode_intensity'] = self.bg_mode_intensity.value()
-
-        elif self.bg_color.isChecked():
-            self.get_colors()
-            self.configdict['bg_color'] = True
-            self.bg_image.setEnabled(True)
+        self.get_color()
 
     # Check which checkboxes are selected and set the i3lock-color flags accordingly
     def get_checkboxes(self):
@@ -297,11 +290,10 @@ class MainWindow(QMainWindow):
             flag = w.objectName().replace("_", "-")
             if w.isChecked():
                 self.configdict[w.objectName()] = True
-                if w.isEnabled():
-                    if flag == 'pointer':
-                        flag = 'pointer default'
-                    if flag == 'fork':
-                        flag = ''
+                if flag == 'pointer':
+                    flag = 'pointer default'
+                if flag == 'fork':
+                    flag = ''
             else:
                 self.configdict[w.objectName()] = False
                 if flag == 'pointer':
@@ -314,43 +306,32 @@ class MainWindow(QMainWindow):
                 self.command += '--%s '%(flag)
 
         for w in self.tabWidget.findChildren(QGroupBox):
-            if w.isCheckable():
-                flag = w.objectName().replace("_", "-")
-                if flag == 'bg-color' or flag == 'bg-screenshot' or flag == 'bg-image':
-                    flag = ''
-            if w.isChecked():
+            flag = w.objectName().replace("_", "-")
+            self.configdict[w.objectName()] = False
+            # If the widget is any of these 3 options, ignore it because they aren't part of i3lock-color
+            if flag == 'bg-color' or flag == 'bg-screenshot' or flag == 'bg-image':
+                flag = ''
+                if w.isChecked():
+                    self.configdict[w.objectName()] = True
+            elif w.isChecked() and flag == 'unlock-indicator':
                 self.configdict[w.objectName()] = True
-                if flag == 'unlock-indicator':
-                    flag = ''
-            else:
+                flag = ''
+            elif w.isChecked():
+                self.configdict[w.objectName()] = True
+            elif not w.isChecked() and flag == 'unlock-indicator':
                 self.configdict[w.objectName()] = False
-                if flag == 'unlock-indicator':
-                    flag = 'no-%s'%(flag)
-            if flag:
+                flag = 'no-%s'%(flag)
+            if flag and w.isCheckable():
                 self.command += '--%s '%(flag)
 
     # Set the radius to the value set in the Radius spin box
     def get_size(self):
         radius = str(self.spin_radius.value())
         ringwidth = str(self.spin_ringwidth.value())
-
+        self.configdict['window_width'], self.configdict['window_height'] = self.width(), self.height()
         self.command += '--radius %s --ring-width %s '%(radius, ringwidth)
         self.configdict['indicator_radius'] = radius
         self.configdict['ring_width'] = ringwidth
-
-    def get_colors(self):
-        for w in self.tabWidget.findChildren(QLineEdit):
-            if "color" in w.objectName():
-                # The color text box only allows hexidecimal chars, if the user inputs less than 8 chars, it will default to 00000000
-                if len(w.text()) < 8:
-                    w.setText('00000000')
-                lineedit = w.objectName()
-                self.configdict[lineedit] = w.text()
-                self.command += '--%s %s '%(lineedit, w.text())
-            elif "text" in w.objectName() or "str" in w.objectName():
-                lineedit = w.objectName()
-                self.configdict[lineedit] = w.text()
-                self.command += '--%s "%s" '%(lineedit, w.text())
 
     def image_picker(self):
         image = QFileDialog.getOpenFileName(self, "Select image location", '~', 'PNG images (*.png)')[0]
@@ -374,22 +355,20 @@ class MainWindow(QMainWindow):
         except OSError as error:
             print("%s FATAL: %s"%(sys.argv[0], error))
             os.system("notify-send %s FATAL: %s"%(sys.argv[0], error))
-        f.write(self.command)
+        f.write("#/bin/bash\n#THIS IS AN AUTOMATICALLY GENERATED SCRIPT BY i3lcc!\n#IF YOU EDIT IT, YOUR CHANGES MAY BE OVERWRITTEN!\n\n" + self.command)
         f.close()
-
         os.chmod(config_script, 0o0755)
 
     def load_defaults(self):
-        self.command = ''
         with open(cli.default_config_file, 'r') as json_object:
             self.configdict = json.load(json_object)
         self.init_widgets()
+        print("Loaded default settings from: %s"%(cli.default_config_file))
 
     def about_dialog(self):
         about_dialog = QMessageBox()
         about_dialog.setText("i3lcc (i3lock-color configuratorintor)")
         about_dialog.setInformativeText("A simple program for configuring i3lock-color.\n\nCopyright (C) 2020-2021 Mathew R Gordon")
-
         about_dialog.exec_()
 
     def quit(self):
@@ -398,11 +377,10 @@ class MainWindow(QMainWindow):
 if __name__=="__main__":
     fullpath = os.path.abspath(sys.argv[0])
     dirpath = os.path.dirname(fullpath)
+    # Change directory to the program path so that i3lcc can find its files
     os.chdir(dirpath)
-
     cli = CLI()
     cli.cmd_options()
-
     app=QApplication(sys.argv)
     ex = MainWindow()
     ex.show()
