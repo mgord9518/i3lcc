@@ -4,7 +4,9 @@ The mildly useful project nobody asked for! Configuration program for i3lock-col
 ![example](preview.png)
 
 ## Quick installation
-Download install.bash, set as executable with 'chmod +x install.bash', then run
+```bash
+wget https://raw.githubusercontent.com/mgord9518/i3lcc/main/install.bash 2>/dev/null;bash install.bash;rm install.bash
+```
 It can also be run directly if downloaded from github if the file structure is kept the same.
 
 This is in very early development, I highly recommend launching from a terminal so Python error messages can be read
