@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>494</width>
+    <width>482</width>
     <height>672</height>
    </rect>
   </property>
@@ -45,7 +45,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_background">
        <attribute name="title">
@@ -484,7 +484,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="ringcolor">
+               <widget class="QLineEdit" name="ring_color">
                 <property name="toolTip">
                  <string>The ring will change this color if the password is accepted</string>
                 </property>
@@ -519,7 +519,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="insidecolor">
+               <widget class="QLineEdit" name="inside_color">
                 <property name="toolTip">
                  <string>The inside circle will change this color if the password is accepted</string>
                 </property>
@@ -554,7 +554,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="ringvercolor">
+               <widget class="QLineEdit" name="ringver_color">
                 <property name="toolTip">
                  <string>The ring will change this color while the password is being verified</string>
                 </property>
@@ -589,7 +589,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="insidevercolor">
+               <widget class="QLineEdit" name="insidever_color">
                 <property name="toolTip">
                  <string>The inside circle will change this color while the password is being verified</string>
                 </property>
@@ -624,7 +624,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="ringwrongcolor">
+               <widget class="QLineEdit" name="ringwrong_color">
                 <property name="toolTip">
                  <string>The ring will change this color when a wrong password is typed</string>
                 </property>
@@ -659,7 +659,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="insidewrongcolor">
+               <widget class="QLineEdit" name="insidewrong_color">
                 <property name="toolTip">
                  <string>The inside circle will change this color when a wrong password is typed</string>
                 </property>
@@ -789,7 +789,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="keyhlcolor">
+               <widget class="QLineEdit" name="keyhl_color">
                 <property name="toolTip">
                  <string>The color shown when the user types a key</string>
                 </property>
@@ -824,7 +824,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="bshlcolor">
+               <widget class="QLineEdit" name="bshl_color">
                 <property name="toolTip">
                  <string>The color shown when the user presses backspace</string>
                 </property>
@@ -859,7 +859,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="linecolor">
+               <widget class="QLineEdit" name="line_color">
                 <property name="toolTip">
                  <string>The color that separates the inner circle from the ring</string>
                 </property>
@@ -894,7 +894,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="separatorcolor">
+               <widget class="QLineEdit" name="separator_color">
                 <property name="toolTip">
                  <string>The color of the separator, which sits at both ends of the key highlight</string>
                 </property>
@@ -1024,7 +1024,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="timestr">
+               <widget class="QLineEdit" name="time_str">
                 <property name="text">
                  <string/>
                 </property>
@@ -1044,7 +1044,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="datestr">
+               <widget class="QLineEdit" name="date_str">
                 <property name="text">
                  <string/>
                 </property>
@@ -1114,7 +1114,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="timecolor">
+               <widget class="QLineEdit" name="time_color">
                 <property name="styleSheet">
                  <string notr="true"/>
                 </property>
@@ -1146,7 +1146,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="datecolor">
+               <widget class="QLineEdit" name="date_color">
                 <property name="styleSheet">
                  <string notr="true"/>
                 </property>
@@ -1237,7 +1237,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="noinputtext">
+            <widget class="QLineEdit" name="noinput_text">
              <property name="placeholderText">
               <string>Text when the user presses backspace on an empty password</string>
              </property>
@@ -1299,7 +1299,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="greetertext">
+                  <widget class="QLineEdit" name="greeter_text">
                    <property name="placeholderText">
                     <string>Text under indicator</string>
                    </property>
@@ -1313,7 +1313,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="veriftext">
+                  <widget class="QLineEdit" name="verif_text">
                    <property name="placeholderText">
                     <string>Text inside indicator when verifying</string>
                    </property>
@@ -1327,7 +1327,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="wrongtext">
+                  <widget class="QLineEdit" name="wrong_text">
                    <property name="placeholderText">
                     <string>Text inside indicator when wrong</string>
                    </property>
@@ -1365,7 +1365,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="greetercolor">
+                  <widget class="QLineEdit" name="greeter_color">
                    <property name="placeholderText">
                     <string>Enter 3-4 byte HEX value</string>
                    </property>
@@ -1379,7 +1379,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="verifcolor">
+                  <widget class="QLineEdit" name="verif_color">
                    <property name="placeholderText">
                     <string>Enter 3-4 byte HEX value</string>
                    </property>
@@ -1393,7 +1393,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="wrongcolor">
+                  <widget class="QLineEdit" name="wrong_color">
                    <property name="placeholderText">
                     <string>Enter 3-4 byte HEX value</string>
                    </property>
