@@ -13,31 +13,13 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-# VERSON 0.4.6
+# VERSON 0.5.0
 # This program is in early development and is very likely to have bugs
 # and lack features. Push requests and constructive criticism always
 # welcome!
 
 # CHANGELOG:
-# * Changed the location of the icon to the correct directory, which
-#   should have been ./usr/share/icons/locolor/apps/i3lcc.svg instead
-#   of ./usr/share/icons/locolor/i3lcc.svg
-# * Visual changes. Removed the 'indicator colors' tab and merged it
-#   with the 'indicator' tab
-# * More restructuring of the code, but this shouldn't change how it
-#   behaves. I plan on adding more features once the code looks half
-#   decent and still functions.
-# * Renamed a few variables to make them slightly more descriptive but 
-#   very likely to rename again in the near furture.
-# * Simplified some functions
-# * Simplified the imagemagick output into one sed command
-# * Added a version command line option
-# * Fixed a bug that caused
-# * Changed window title from "i3lcc" to "i3lock-color 
-#   configuratorinator", although the title wouldn't likely even be
-#   seen while using i3 in the first place
-# * Fixed a bug that caused the window size to reset to default when
-#   'defaults' button was clicked.
+# * Updated to work with the new i3lock-color syntax
 
 import json
 import os
@@ -231,7 +213,7 @@ class MainWindow(QMainWindow):
             # Divide the spinbox value by 4, then take it from 30. This gives a good range of different pixelation values
             intensity = str(round(30 - self.bg_mode_intensity.value() / 4))
             # A very long, ugly command to get the screen resolution in a bash variable 'R', capture a screenshot in BMP format because it was the fastest format I found in testing, scale it down to whatever level chosen, then scale it back up to the original size, finally pipe it into i3lock-color as raw RGB data
-            self.command = 'R=$(xdpyinfo|sed -rn "/dimensions/s/^[^0-9]*([0-9]+x[0-9]+).*$/\\1/p");import -silent -window root bmp:-|convert bmp:- -scale %s%% -scale $R\\! rgb:-|i3lock --raw $R:rgb --image /dev/stdin --locktext "" -c 00000000 '%(intensity)
+            self.command = 'R=$(xdpyinfo|sed -rn "/dimensions/s/^[^0-9]*([0-9]+x[0-9]+).*$/\\1/p");import -silent -window root bmp:-|convert bmp:- -scale %s%% -scale $R\\! rgb:-|i3lock --raw $R:rgb --image /dev/stdin --lock-text "" -c 00000000 '%(intensity)
             self.configdict['bg_mode'] = 'magickpixelate'
             self.configdict['bg_mode_intensity'] = self.bg_mode_intensity.value()
 
@@ -241,11 +223,11 @@ class MainWindow(QMainWindow):
                 # The color text box only allows hexidecimal chars, if the user inputs less than 8 chars, it will default to 00000000
                 if len(w.text()) < 8:
                     w.setText('00000000')
-                lineedit = w.objectName()
+                lineedit = w.objectName().replace("_", "-")
                 self.configdict[lineedit] = w.text()
                 self.command += '--%s %s '%(lineedit, w.text())
             elif "text" in w.objectName() or "str" in w.objectName():
-                lineedit = w.objectName()
+                lineedit = w.objectName().replace("_", "-")
                 self.configdict[lineedit] = w.text()
                 self.command += '--%s "%s" '%(lineedit, w.text())
             elif w.objectName() == "image":
@@ -268,7 +250,7 @@ class MainWindow(QMainWindow):
         else:
             imageflag = '--image "%s" '%(path)
             self.configdict['bg_img_path'] = path
-        self.command = 'i3lock --locktext "" '
+        self.command = 'i3lock --lock-text "" '
         if self.bg_screenshot.isChecked() and not self.bg_color.isChecked():
             self.get_screenshot()
         elif self.bg_screenshot.isChecked() and self.bg_color.isChecked():
