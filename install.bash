@@ -61,6 +61,7 @@ uninstall_setup() {
         exit 0
     elif [ $option = 'c' ] || [ $option = 'C' ]; then
         echo -e "${G} > ${W}Quitting without install; no changes made."
+        exit 0
     else
         echo -e "${Y} > ${W}Unknown option!"
     fi
