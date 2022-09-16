@@ -31,9 +31,9 @@ echo -e "${G}i3lcc install script"
 setup() {
     echo -ne "${B} > ${W}Would you like to continue the install to [${C}${INSTALLPATH}${W}]? (Y/n): "
     read option
-    if [ $option == 'y' ] || [ $option == 'Y' ]; then
+    if [ $option = 'y' ] || [ $option = 'Y' ]; then
         install_all
-    elif [ $option == 'n' ] || [ $option == 'N' ]; then
+    elif [ $option = 'n' ] || [ $option = 'N' ]; then
         echo -e "${G} > ${W}Quitting without install; no changes made."
     else
         echo -e "${Y} > ${W}Unknown option!"
@@ -44,16 +44,16 @@ setup() {
 uninstall_setup() {
     echo -ne "${B} > ${W}Previous install found, would you like to [R]emove it, [U]pgrade or [C]ancel? (R/u/c): "
     read option
-    if [ $option == 'r' ] || [ $option == 'R' ]; then
+    if [ $option = 'r' ] || [ $option = 'R' ]; then
         echo -ne "${B} > ${W}Would you also like to remove saved configs? (Y/n): "
         read option
         echo -e "${G} > ${W}Removing i3lcc..."
-        [ $option == 'y' ] || [ $option == 'Y' ] && rm -rf ~/.config/i3lcc
+        [ $option = 'y' ] || [ $option = 'Y' ] && rm -rf ~/.config/i3lcc
         rm -rf  $INSTALLPATH/bin/i3lcc \
                 $INSTALLPATH/share/i3lcc
         [ $? -eq 0 ] && echo -e "${G} > ${W}Removal complete!"
         exit 0
-    elif [ $option == 'u' ] || [ $option == 'U' ]; then
+    elif [ $option = 'u' ] || [ $option = 'U' ]; then
         echo -e "${G} > ${W}Quitting without install; no changes made."
     else
         echo -e "${Y} > ${W}Unknown option!"
@@ -79,7 +79,7 @@ install_all() {
     echo -e "${G} > ${W}Install complete!"
 }
 
-if [ $EUID == 0 ]; then
+if [ $EUID = 0 ]; then
     echo -e "${G} > ${W}Superuser permissions granted; installing as system."
     INSTALLPATH=$ROOTINSTALLPATH
 else
