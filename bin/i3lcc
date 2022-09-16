@@ -13,15 +13,13 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-# VERSON 0.6.0
+# VERSON 0.6.1
 # This program is in early development and is very likely to have bugs
 # and lack features. Push requests and constructive criticism always
 # welcome!
 
 # CHANGELOG:
-# * Fixed image dialog to open in home directory
-# * Removed need for `run.bash`
-# * Large refactor of code
+# * Fixed issues with saving info on the indicator tab
 
 import json
 import os
@@ -219,6 +217,9 @@ class MainWindow(QMainWindow):
         self.combo_screenshot.currentIndexChanged.connect(self.update_info)
         self.bg_image.clicked.connect(self.update_info)
 
+        self.spin_radius.setValue(int(self.configdict["indicator_radius"]))
+        self.spin_ringwidth.setValue(int(self.configdict["ring_width"]))
+
         # Background tab
         if self.configdict['bg_mode'] == 'i3lockblur':
             self.combo_screenshot.setCurrentIndex(0)
@@ -243,6 +244,7 @@ class MainWindow(QMainWindow):
         self.configdict['current_tab'] = self.tabWidget.currentIndex()
         self.get_background()
         self.get_checkboxes()
+        self.get_color()
         self.get_size()
 
     def get_screenshot(self):
@@ -269,14 +271,14 @@ class MainWindow(QMainWindow):
                 # The color text box only allows hexidecimal chars, if the user inputs less than 8 chars, it will default to 00000000
                 if len(w.text()) < 8:
                     w.setText('00000000')
-                lineedit = w.objectName().replace("_", "-")
-                self.configdict[lineedit] = w.text()
+                #lineedit = w.objectName().replace("_", "-")
+                self.configdict[w.objectName()] = w.text()
             elif "text" in w.objectName() or "str" in w.objectName():
-                lineedit = w.objectName().replace("_", "-")
-                self.configdict[lineedit] = w.text()
+                #lineedit = w.objectName().replace("_", "-")
+                self.configdict[w.objectName()] = w.text()
             elif w.objectName() == "image":
                 lineedit = w.objectName()
-                self.configdict[lineedit] = w.text()
+                self.configdict[w.objectName()] = w.text()
 
     def get_background(self):
         # Set imageflag as empty in case the user doesn't supply any image, otherwise an error will occour
@@ -346,8 +348,8 @@ class MainWindow(QMainWindow):
 
     # Set the radius to the value set in the Radius spin box
     def get_size(self):
-        radius    = str(self.spin_radius.value())
-        ringwidth = str(self.spin_ringwidth.value())
+        radius    = int(self.spin_radius.value())
+        ringwidth = int(self.spin_ringwidth.value())
         self.configdict['window_width'], self.configdict['window_height'] = self.width(), self.height()
         self.configdict['indicator_radius'] = radius
         self.configdict['ring_width'] = ringwidth
