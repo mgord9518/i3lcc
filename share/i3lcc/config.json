@@ -44,6 +44,6 @@
   "verif_text": "",
   "wrong_text": "",
   "noinput_text": "",
-  "radius": 100,
+  "indicator_radius": 100,
   "ring_width": 3
 }
