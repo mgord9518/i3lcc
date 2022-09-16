@@ -54,6 +54,11 @@ uninstall_setup() {
         [ $? -eq 0 ] && echo -e "${G} > ${W}Removal complete!"
         exit 0
     elif [ $option = 'u' ] || [ $option = 'U' ]; then
+        echo -e "${G} > ${W}Removing old installation"
+        rm -rf  $INSTALLPATH/bin/i3lcc \
+                $INSTALLPATH/share/i3lcc
+        install_all
+    elif [ $option = 'c' ] || [ $option = 'C' ]; then
         echo -e "${G} > ${W}Quitting without install; no changes made."
     else
         echo -e "${Y} > ${W}Unknown option!"
@@ -74,7 +79,6 @@ install_all() {
     rm -rf i3lcc/
 
     chmod +x $INSTALLPATH/bin/i3lcc
-    chmod +x $INSTALLPATH/share/i3lcc/run.bash
 
     echo -e "${G} > ${W}Install complete!"
 }
