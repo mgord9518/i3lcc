@@ -58,6 +58,7 @@ uninstall_setup() {
         rm -rf  $INSTALLPATH/bin/i3lcc \
                 $INSTALLPATH/share/i3lcc
         install_all
+        exit 0
     elif [ $option = 'c' ] || [ $option = 'C' ]; then
         echo -e "${G} > ${W}Quitting without install; no changes made."
     else
